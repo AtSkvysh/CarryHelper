@@ -7,6 +7,8 @@ Post-release:
 
 --[[
 Changelog:
+0.1.4: API bump for Waking Flame.
+
 0.1.3: Catch incoming trade party names regardless of whether the UI is running or not. The rest of the functionality should stay the same.
 
 0.1.2: Remove unnecessary unitTag usage.
@@ -21,7 +23,7 @@ instead of looping through all the current members.
 CarryHelper = {
   name = "CarryHelper",
   title = "CarryHelper",
-  version = "0.1.3",
+  version = "0.1.4",
   varVersion = 1,
   shareAmount = 0, -- gold share for each person
   numGroupMembers = 0, -- number of group members
