@@ -21,6 +21,9 @@ An addon meant to help carry run organizers with distributing the gold.
 ## Installation
 Download the latest [release](https://github.com/AtSkvysh/CarryHelper/releases) or clone the repository and copy the folder into the right place as with any other addon.
 
+### Dependencies
+[LibAddonMenu](https://esoui.com/downloads/info7-LibAddonMenu.html)
+
 ## Commands
 Use `/ch` in chat to access commands.
 
