@@ -1,0 +1,26 @@
+<GuiXml>
+	<Controls>
+		<Control name="CarryHelperPanel" resizeToFitDescendents="true" hidden="true" virtual="true">
+			<Controls>
+				<Backdrop name="$(parent)Backdrop">
+					<Anchor point="LEFT" />
+					<Dimensions x="200" y="28" />
+				</Backdrop>
+				<Label name="$(parent)Name" font="$(GAMEPAD_MEDIUM_FONT)|$(KB_24)|soft-shadow-thin" wrapMode="ELLIPSIS" horizontalAlignment="LEFT" verticalAlignment="CENTER">
+					<Anchor point="LEFT" offsetX="2" />
+					<Dimensions x="180" y="28" />
+				</Label>
+				<Label name="$(parent)Stat" font="$(GAMEPAD_MEDIUM_FONT)|$(KB_24)|soft-shadow-thin" wrapMode="TRUNCATE" horizontalAlignment="RIGHT" verticalAlignment="CENTER">
+					<Anchor point="RIGHT" offsetX="-4" />
+					<Dimensions x="26" y="28" />
+				</Label>
+			</Controls>
+		</Control>
+
+		<TopLevelControl name="CarryHelperFrame" resizeToFitDescendents="true" mouseEnabled="true" movable="true" clampedToScreen="true" hidden="true">
+			<OnMoveStop>
+				CarryHelper.OnMoveStop()
+			</OnMoveStop>
+		</TopLevelControl>
+	</Controls>
+</GuiXml>

@@ -1,0 +1,11 @@
+## Title: CarryHelper
+## Version: 0.1.3
+## APIVersion: 100034
+## IsLibrary: false
+## SavedVariables: CarryHelperSavedVariables
+
+## DependsOn: LibAddonMenu-2.0>=28
+
+CarryHelper.lua
+CarryHelperSettings.lua
+CarryHelper.xml
