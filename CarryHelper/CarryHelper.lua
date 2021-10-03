@@ -7,6 +7,11 @@ Post-release:
 
 --[[
 Changelog:
+0.1.6: Remove unnecessary tradePartyName variable clear when starting the UI.
+
+0.1.5: Properly implement 0.1.3 change - should listen for names even if the UI isn't running.
+       Clear trade party name when UI is started/destroyed.
+
 0.1.4: API bump for Waking Flame.
 
 0.1.3: Catch incoming trade party names regardless of whether the UI is running or not. The rest of the functionality should stay the same.
@@ -23,7 +28,7 @@ instead of looping through all the current members.
 CarryHelper = {
   name = "CarryHelper",
   title = "CarryHelper",
-  version = "0.1.4",
+  version = "0.1.6",
   varVersion = 1,
   shareAmount = 0, -- gold share for each person
   numGroupMembers = 0, -- number of group members
@@ -58,8 +63,6 @@ function CarryHelper.StartTracker() -- Start the tracker if all conditions via c
   SCENE_MANAGER:GetScene("hud"):AddFragment(CarryHelper.fragment)
   SCENE_MANAGER:GetScene("hudui"):AddFragment(CarryHelper.fragment)
   CarryHelper.Reset()
-  EVENT_MANAGER:RegisterForEvent("CarryHelperTradeConsidering", EVENT_TRADE_INVITE_CONSIDERING, CarryHelper.TradeConsidering)
-  EVENT_MANAGER:RegisterForEvent("CarryHelperTradeWaiting", EVENT_TRADE_INVITE_WAITING, CarryHelper.TradeWaiting)
   EVENT_MANAGER:RegisterForEvent("CarryHelperTradeAccepted", EVENT_TRADE_INVITE_ACCEPTED, CarryHelper.TradeAccepted)
   EVENT_MANAGER:RegisterForEvent("CarryHelperTradeSucceeded", EVENT_TRADE_SUCCEEDED, CarryHelper.TradeSucceeded)
   EVENT_MANAGER:RegisterForEvent("CarryHelperLeftGroup", EVENT_GROUP_MEMBER_LEFT, CarryHelper.GroupStatusCheck)
@@ -72,14 +75,13 @@ end
 function CarryHelper.EndTracker() -- End tracker if we traded everyone or used a chat command or left the group
   CarryHelper.trackerEnabled = false
   CarryHelper.numTraded = 0
+  CarryHelper.tradePartyName = ""
   CarryHelper.numGroupMembers = 0
   CarryHelper.startGold = 0
   CarryHelper.expectedGold = 0
   CarryHelper.shareAmount = 0
   CarryHelper.HideUI()
   EVENT_MANAGER:UnregisterForUpdate("CarryHelperCountdown")
-  EVENT_MANAGER:UnregisterForEvent("CarryHelperTradeConsidering", EVENT_TRADE_INVITE_CONSIDERING)
-  EVENT_MANAGER:UnregisterForEvent("CarryHelperTradeWaiting", EVENT_TRADE_INVITE_WAITING)
   EVENT_MANAGER:UnregisterForEvent("CarryHelperTradeAccepted", EVENT_TRADE_INVITE_ACCEPTED)
   EVENT_MANAGER:UnregisterForEvent("CarryHelperTradeSucceeded", EVENT_TRADE_SUCCEEDED)
 end
@@ -228,7 +230,7 @@ function CarryHelper.HandleSlashCommands(cmd) -- Slash command function
   elseif options[1] == "stats" then
     CarryHelper.DisplayStats()
   else -- If anything else was provided, display available commands instead
-    CHAT_ROUTER:AddSystemMessage("CH: Available commands:")
+    CHAT_ROUTER:AddSystemMessage("Carry Helper: Available commands:")
     CHAT_ROUTER:AddSystemMessage("/ch start <amount> – Enable trade tracker with the specified amount of gold as a single share.")
     CHAT_ROUTER:AddSystemMessage("/ch end – Disable trade tracker, destroy UI and clear associated variables.")
     CHAT_ROUTER:AddSystemMessage("/ch stats – Display silly stats.")
@@ -321,10 +323,10 @@ function CarryHelper.UpdateStatus(unitTag) -- Update name panels based on whethe
 
 	if CarryHelper.units[unitTag].count >= 1 then -- GREEN
 		bg:SetCenterColor(0, 1, 0, 1)
-	elseif CarryHelper.units[unitTag].self then -- SELF, always red-ish
+	elseif CarryHelper.units[unitTag].self then -- SELF, always black-transparent
 		bg:SetCenterColor(0, 0, 0, 0.35)
 	else
-		bg:SetCenterColor(0, 0, 0, 0.4) -- RED
+		bg:SetCenterColor(0, 0, 0, 0.4) -- black-transparent
 	end
 end
 
@@ -369,6 +371,8 @@ end
 
 function CarryHelper.OnAddOnLoaded(event, addonName) -- Initialize the addon
   if addonName == CarryHelper.name then
+    EVENT_MANAGER:RegisterForEvent("CarryHelperTradeConsidering", EVENT_TRADE_INVITE_CONSIDERING, CarryHelper.TradeConsidering)
+    EVENT_MANAGER:RegisterForEvent("CarryHelperTradeWaiting", EVENT_TRADE_INVITE_WAITING, CarryHelper.TradeWaiting)
     EVENT_MANAGER:UnregisterForEvent(CarryHelper.name, EVENT_ADD_ON_LOADED)
     CarryHelper.SettingsLoad()
     CarryHelper.SettingsBuildMenu()

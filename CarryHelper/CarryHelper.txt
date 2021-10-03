@@ -1,5 +1,5 @@
 ## Title: CarryHelper
-## Version: 0.1.4
+## Version: 0.1.6
 ## APIVersion: 101031
 ## IsLibrary: false
 ## SavedVariables: CarryHelperSavedVariables
